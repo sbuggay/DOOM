@@ -157,9 +157,9 @@ int	key_use = KEY_SPACE;
 int	key_strafe;
 int	key_speed = KEY_RSHIFT; 
  
-int mousebfire = 0; 
+int mousebfire; 
 int mousebstrafe; 
-int mousebforward = 2; 
+int mousebforward; 
  
 int joybfire; 
 int joybstrafe; 

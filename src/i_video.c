@@ -17,7 +17,7 @@
 // $Log:$
 //
 // DESCRIPTION:
-//	DOOM graphics stuff for X11, UNIX.
+//	DOOM graphics stuff for RayLib
 //
 //-----------------------------------------------------------------------------
 
@@ -81,10 +81,10 @@ int lastY = 0;
 int data1 = 0;
 
 //
-//  Translates the key currently in X_event
+//  Translates the key from raylib
 //
 
-int xlatekey(int key)
+int raylibkey(int key)
 {
 	int rc = 0;
 
@@ -109,58 +109,47 @@ int xlatekey(int key)
 		case KEY_E:
 		case RAY_KEY_SPACE:
 								rc = KEY_SPACE;			break;
-		default:
+		case RAY_KEY_TAB:
+								rc= KEY_TAB;			break;
+	
+		case RAY_KEY_F1:	rc = KEY_F1;		break;
+		case RAY_KEY_F2:	rc = KEY_F2;		break;
+		case RAY_KEY_F3:	rc = KEY_F3;		break;
+		case RAY_KEY_F4:	rc = KEY_F4;		break;
+		case RAY_KEY_F5:	rc = KEY_F5;		break;
+		case RAY_KEY_F6:	rc = KEY_F6;		break;
+		case RAY_KEY_F7:	rc = KEY_F7;		break;
+		case RAY_KEY_F8:	rc = KEY_F8;		break;
+		case RAY_KEY_F9:	rc = KEY_F9;		break;
+		case RAY_KEY_F10:	rc = KEY_F10;		break;
+		case RAY_KEY_F11:	rc = KEY_F11;		break;
+		case RAY_KEY_F12:	rc = KEY_F12;		break;
+		case KEY_LEFT_ALT:
+		case KEY_RIGHT_ALT:
+		case KEY_LEFT_SUPER:
+		case KEY_RIGHT_SUPER:
+		rc = KEY_RALT;
+		break;
+
+		case RAY_KEY_BACKSPACE:
+		case KEY_DELETE:	rc = KEY_BACKSPACE;	break;
+		case RAY_KEY_PAUSE:	rc = KEY_PAUSE;		break;
+
+		case KEY_EQUAL:
+		case KEY_KP_EQUAL:	rc = KEY_EQUALS;	break;
+
+		case RAY_KEY_MINUS:
+		case KEY_KP_SUBTRACT:	rc = KEY_MINUS;		break;
+
 		if (rc >= RAY_KEY_SPACE && rc <= KEY_GRAVE)
 			rc = rc - RAY_KEY_SPACE + ' ';
 		if (rc >= 'A' && rc <= 'Z')
 			rc = rc;
 		break;
 	}
-    //   case XK_Tab:	rc = KEY_TAB;		break;
-    //   case XK_F1:	rc = KEY_F1;		break;
-    //   case XK_F2:	rc = KEY_F2;		break;
-    //   case XK_F3:	rc = KEY_F3;		break;
-    //   case XK_F4:	rc = KEY_F4;		break;
-    //   case XK_F5:	rc = KEY_F5;		break;
-    //   case XK_F6:	rc = KEY_F6;		break;
-    //   case XK_F7:	rc = KEY_F7;		break;
-    //   case XK_F8:	rc = KEY_F8;		break;
-    //   case XK_F9:	rc = KEY_F9;		break;
-    //   case XK_F10:	rc = KEY_F10;		break;
-    //   case XK_F11:	rc = KEY_F11;		break;
-    //   case XK_F12:	rc = KEY_F12;		break;
-	
-    //   case XK_BackSpace:
-    //   case XK_Delete:	rc = KEY_BACKSPACE;	break;
 
-    //   case XK_Pause:	rc = KEY_PAUSE;		break;
 
-    //   case XK_KP_Equal:
-    //   case XK_equal:	rc = KEY_EQUALS;	break;
 
-    //   case XK_KP_Subtract:
-    //   case XK_minus:	rc = KEY_MINUS;		break;
-
-    //   case XK_Shift_L:
-    //   case XK_Shift_R:
-	// rc = KEY_RSHIFT;
-	// break;
-	
-    //   case XK_Control_L:
-    //   case XK_Control_R:
-	// rc = KEY_RCTRL;
-	// break;
-	
-    //   case XK_Alt_L:
-    //   case XK_Meta_L:
-    //   case XK_Alt_R:
-    //   case XK_Meta_R:
-	// rc = KEY_RALT;
-	// break;
-	
-    
-	// break;
-    // }
 
     return rc;
 
@@ -168,7 +157,7 @@ int xlatekey(int key)
 
 void I_ShutdownGraphics(void)
 {
-
+	CloseWindow();
 }
 
 //
@@ -195,14 +184,14 @@ void I_GetEvent(void)
 
 		if (keyDown) {
 			event.type = ev_keydown;
-			event.data1 = xlatekey(i);
+			event.data1 = raylibkey(i);
 			if (event.data1 > 0)
 				D_PostEvent(&event);
 
 		}
 		else if(keyUp) {
 			event.type = ev_keyup;
-			event.data1 = xlatekey(i);
+			event.data1 = raylibkey(i);
 			if (event.data1 > 0)
 				D_PostEvent(&event);
 		}
@@ -236,86 +225,6 @@ void I_GetEvent(void)
 	D_PostEvent(&event);
 
 
-    // put event-grabbing stuff in here
-	
-    // switch (X_event.type)
-    // {
-    //   case KeyPress:
-	// event.type = ev_keydown;
-	// event.data1 = xlatekey();
-	// D_PostEvent(&event);
-	// // fprintf(stderr, "k");
-	// break;
-    //   case KeyRelease:
-	// event.type = ev_keyup;
-	// event.data1 = xlatekey();
-	// D_PostEvent(&event);
-	// // fprintf(stderr, "ku");
-	// break;
-    //   case ButtonPress:
-	// event.type = ev_mouse;
-	// event.data1 =
-	//     (X_event.xbutton.state & Button1Mask)
-	//     | (X_event.xbutton.state & Button2Mask ? 2 : 0)
-	//     | (X_event.xbutton.state & Button3Mask ? 4 : 0)
-	//     | (X_event.xbutton.button == Button1)
-	//     | (X_event.xbutton.button == Button2 ? 2 : 0)
-	//     | (X_event.xbutton.button == Button3 ? 4 : 0);
-	// event.data2 = event.data3 = 0;
-	// D_PostEvent(&event);
-	// // fprintf(stderr, "b");
-	// break;
-    //   case ButtonRelease:
-	// event.type = ev_mouse;
-	// event.data1 =
-	//     (X_event.xbutton.state & Button1Mask)
-	//     | (X_event.xbutton.state & Button2Mask ? 2 : 0)
-	//     | (X_event.xbutton.state & Button3Mask ? 4 : 0);
-	// // suggest parentheses around arithmetic in operand of |
-	// event.data1 =
-	//     event.data1
-	//     ^ (X_event.xbutton.button == Button1 ? 1 : 0)
-	//     ^ (X_event.xbutton.button == Button2 ? 2 : 0)
-	//     ^ (X_event.xbutton.button == Button3 ? 4 : 0);
-	// event.data2 = event.data3 = 0;
-	// D_PostEvent(&event);
-	// // fprintf(stderr, "bu");
-	// break;
-    //   case MotionNotify:
-	// event.type = ev_mouse;
-	// event.data1 =
-	//     (X_event.xmotion.state & Button1Mask)
-	//     | (X_event.xmotion.state & Button2Mask ? 2 : 0)
-	//     | (X_event.xmotion.state & Button3Mask ? 4 : 0);
-	// event.data2 = (X_event.xmotion.x - lastmousex) << 2;
-	// event.data3 = (lastmousey - X_event.xmotion.y) << 2;
-
-	// if (event.data2 || event.data3)
-	// {
-	//     lastmousex = X_event.xmotion.x;
-	//     lastmousey = X_event.xmotion.y;
-	//     if (X_event.xmotion.x != X_width/2 &&
-	// 	X_event.xmotion.y != X_height/2)
-	//     {
-	// 	D_PostEvent(&event);
-	// 	// fprintf(stderr, "m");
-	// 	mousemoved = false;
-	//     } else
-	//     {
-	// 	mousemoved = true;
-	//     }
-	// }
-	// break;
-	
-    //   case Expose:
-    //   case ConfigureNotify:
-	// break;
-	
-    //   default:
-	// if (doShm && X_event.type == X_shmeventtype) shmFinished = true;
-	// break;
-    // }
-
 }
 
 //
@@ -327,27 +236,6 @@ void I_StartTic (void)
 	I_GetEvent();
 
 	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
-
-
-    // // Warp the pointer back to the middle of the window
-    // //  or it will wander off - that is, the game will
-    // //  loose input focus within X11.
-    // if (grabMouse)
-    // {
-	// if (!--doPointerWarp)
-	// {
-	//     XWarpPointer( X_display,
-	// 		  None,
-	// 		  X_mainWindow,
-	// 		  0, 0,
-	// 		  0, 0,
-	// 		  X_width/2, X_height/2);
-
-	//     doPointerWarp = POINTER_WARP_COUNTDOWN;
-	// }
-    // }
-
-    // mousemoved = false;
 
 }
 
