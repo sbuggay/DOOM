@@ -153,13 +153,13 @@ int	key_down = KEY_DOWNARROW;
 int key_strafeleft = KEY_LEFTARROW;
 int	key_straferight = KEY_RIGHTARROW; 
 int key_fire = KEY_RCTRL;
-int	key_use = 'E';
+int	key_use = KEY_SPACE;
 int	key_strafe;
-int	key_speed; 
+int	key_speed = KEY_RSHIFT; 
  
-int mousebfire = 1; 
+int mousebfire = 0; 
 int mousebstrafe; 
-int mousebforward; 
+int mousebforward = 2; 
  
 int joybfire; 
 int joybstrafe; 
@@ -402,10 +402,10 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	} 
     } 
  
-    forward += mousey; 
-    if (strafe) 
-	side += mousex*2; 
-    else 
+    // forward += mousey; 
+    // if (strafe) 
+	// side += mousex*2; 
+    // else 
 	cmd->angleturn -= mousex*0x8; 
 
     mousex = mousey = 0; 

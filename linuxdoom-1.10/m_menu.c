@@ -1851,7 +1851,7 @@ void M_Init (void)
     itemOn = currentMenu->lastOn;
     whichSkull = 0;
     skullAnimCounter = 10;
-    screenSize = screenblocks - 3;
+    screenSize = screenblocks - 1;
     messageToPrint = 0;
     messageString = NULL;
     messageLastMenuActive = menuactive;

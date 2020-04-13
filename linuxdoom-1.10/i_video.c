@@ -78,6 +78,7 @@ RenderTexture2D target;
 
 int lastX = 0;
 int lastY = 0;
+int data1 = 0;
 
 //
 //  Translates the key currently in X_event
@@ -105,6 +106,9 @@ int xlatekey(int key)
 		case KEY_LEFT_SHIFT:
 		case KEY_RIGHT_SHIFT:
 								rc = KEY_RSHIFT;		break;
+		case KEY_E:
+		case RAY_KEY_SPACE:
+								rc = KEY_SPACE;			break;
 		default:
 		if (rc >= RAY_KEY_SPACE && rc <= KEY_GRAVE)
 			rc = rc - RAY_KEY_SPACE + ' ';
@@ -204,21 +208,32 @@ void I_GetEvent(void)
 		}
 	}
 	
-
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-		event.type = ev_mouse;
-		event.data1 = 1;
-		D_PostEvent(&event);
+		data1 |= 1;  // set mouse 1
+	}
+	else if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+		data1 &= 6; // clear mouse 1
+	}
+
+	if (IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON)) {
+		data1 |= 2;  // set mouse 1
+	}
+	else if (IsMouseButtonReleased(MOUSE_MIDDLE_BUTTON)) {
+		data1 &= 5; // clear mouse 1
+	}
+
+	if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+		data1 |= 4;  // set mouse 1
+	}
+	else if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
+		data1 &= 3; // clear mouse 1
 	}
 
 	event.type = ev_mouse;
-	event.data1 = 0;
+	event.data1 = data1;
 	event.data2 = (GetMouseX() - GetScreenWidth() / 2) * 2;
 	event.data3 = (GetScreenHeight() / 2 - GetMouseY()) * 2;
 	D_PostEvent(&event);
-
-	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
-
 
 
     // put event-grabbing stuff in here
@@ -310,6 +325,9 @@ void I_StartTic (void)
 {
 
 	I_GetEvent();
+
+	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+
 
     // // Warp the pointer back to the middle of the window
     // //  or it will wander off - that is, the game will
