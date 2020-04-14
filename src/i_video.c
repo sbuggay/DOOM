@@ -24,19 +24,12 @@
 static const char
 rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 
-#include "raylib.h"
-
 #include <stdlib.h>
-
 #include <stdarg.h>
-// #include <sys/time.h>
 #include <sys/types.h>
-// #include <sys/socket.h>
-
-// #include <netinet/in.h>
-// #include <errnos.h>
 #include <signal.h>
 
+#include "raylib.h"
 #include "doomstat.h"
 #include "i_system.h"
 #include "v_video.h"
@@ -44,8 +37,6 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 #include "d_main.h"
 
 #include "doomdef.h"
-
-#define POINTER_WARP_COUNTDOWN	1
 
 typedef struct {
 	unsigned char *data;
@@ -55,14 +46,10 @@ XImage*		image;
 int		X_width;
 int		X_height;
 
-// XShmSegmentInfo	X_shminfo;
-int		X_shmeventtype;
-
 // Fake mouse handling.
 // This cannot work properly w/o DGA.
 // Needs an invisible mouse cursor at least.
 boolean		grabMouse;
-int		doPointerWarp = POINTER_WARP_COUNTDOWN;
 
 // Blocky mode,
 // replace each 320x200 pixel with multiply*multiply pixels.
