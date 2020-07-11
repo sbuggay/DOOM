@@ -4,3 +4,4 @@ build/
 *.lmp
 *.png
 *.exe
+*.swp
