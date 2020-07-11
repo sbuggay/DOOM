@@ -82,8 +82,12 @@ void D_DoAdvanceDemo (void);
 boolean		reboundpacket;
 doomdata_t	reboundstore;
 
-
-
+int isLittleEndian(void)
+{
+  static const int one=1;
+  const int is_little_endian = ((*(char*)&one)==1);
+  return is_little_endian;
+}
 //
 //
 //
@@ -103,9 +107,10 @@ unsigned NetbufferChecksum (void)
     c = 0x1234567;
 
     // FIXME -endianess?
-#ifdef NORMALUNIX
-    return 0;			// byte order problems
-#endif
+    if(isLittleEndian())
+    {
+      return 0;			// byte order problems
+    }
 
     l = (NetbufferSize () - (int)&(((doomdata_t *)0)->retransmitfrom))/4;
     for (i=0 ; i<l ; i++)
