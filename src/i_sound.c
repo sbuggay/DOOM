@@ -602,7 +602,7 @@ void
 I_SubmitSound(void)
 {
   if (gametic % (int) (500 / TICRATE) == 0) {
-    // UpdateAudioStream(audioStream, mixbuffer, MIXBUFFERSIZE);
+    UpdateAudioStream(audioStream, mixbuffer, MIXBUFFERSIZE);
   }
 
 }
