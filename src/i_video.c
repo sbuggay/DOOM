@@ -162,6 +162,7 @@ static int	lastmousex = 0;
 static int	lastmousey = 0;
 boolean		mousemoved = false;
 boolean		shmFinished;
+float mouseX, mouseY;
 
 void I_GetEvent(void)
 {
@@ -209,11 +210,12 @@ void I_GetEvent(void)
 
 	event.type = ev_mouse;
 	event.data1 = data1;
-	event.data2 = (GetMouseX() - GetScreenWidth() / 2) * 2;
-	event.data3 = (GetScreenHeight() / 2 - GetMouseY()) * 2;
+	event.data2 = ((GetMouseX() - mouseX)) * 2;
+	event.data3 = ((GetMouseY() - mouseY)) * 2;
 	D_PostEvent(&event);
 
-
+	mouseX = GetMouseX();
+	mouseY = GetMouseY();
 }
 
 //
@@ -221,10 +223,8 @@ void I_GetEvent(void)
 //
 void I_StartTic (void)
 {
-
 	I_GetEvent();
-
-	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+	
 }
 
 void I_UpdateNoBlit(void)
@@ -259,12 +259,11 @@ void I_FinishUpdate (void)
     
     }
 
-	#define min(a, b) ((a)<(b)? (a) : (b))
-	float scale = min((float)GetScreenWidth()/SCREENWIDTH, (float)GetScreenHeight()/SCREENHEIGHT);
+	float horizontalScale = (float)GetScreenWidth() / SCREENWIDTH;
+	float verticalScale = (float)GetScreenHeight() / SCREENHEIGHT;
 	int fps = GetFPS();
 	char fpsString[5];
 	snprintf(fpsString, 5, "%d", fps);
-
 
 	BeginDrawing();
 	BeginTextureMode(target);
@@ -279,7 +278,7 @@ void I_FinishUpdate (void)
 
 	// Draw RenderTexture2D to window, properly scaled
 	DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
-		(Rectangle){ 0, 0, (float)SCREENWIDTH * scale * BIT_SCALE, (float)SCREENHEIGHT * scale  * BIT_SCALE},
+		(Rectangle){ 0, 0, (float)SCREENWIDTH * horizontalScale * BIT_SCALE, (float)SCREENHEIGHT * verticalScale  * BIT_SCALE},
 		(Vector2){ 0, 0 }, 0.0f, WHITE);
 
 	// DrawText(fpsString, GetScreenWidth() - (strlen(fpsString) - 1) * 25, 0, 20, WHITE);
@@ -410,8 +409,8 @@ void I_InitGraphics(void)
 	    I_Error("bad -geom parameter");
     }
 
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE);  
-	InitWindow(960, 600, "raylib-doom");
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	InitWindow(960, 600, "doom");
 	SetExitKey(0);
 	DisableCursor();
 
