@@ -7,6 +7,7 @@
 
 OSFLAG:=
 ifeq ($(OS),Windows_NT)
+  RM = del /Q /F
   OSFLAG += -D WIN32
   ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
     OSFLAG += -D AMD64
@@ -133,7 +134,7 @@ all:	 $(O)/doom
 
 clean:
   ifeq ($(OS),Windows_NT)
-    del *.o *.exe /s
+	-$(RM) $(O)\*.o /s
   else
     $(rm -f *.o)
     $(rm -f $(O)/*.o)
